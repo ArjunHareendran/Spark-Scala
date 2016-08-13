@@ -9,5 +9,4 @@ object WordCount {
     counts.saveAsTextFile("file:///home/hadoop/Documents/Spark_Test_Files/output_wordcount")
     System.exit(0)
   }
-
 }
