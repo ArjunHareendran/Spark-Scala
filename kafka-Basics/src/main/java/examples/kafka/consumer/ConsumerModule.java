@@ -11,6 +11,10 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import com.beans.NameAndAge;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,12 +43,17 @@ public class ConsumerModule {
 
 		// List out all the topics that you want to read
 		consumer.subscribe(Arrays.asList("fast-messages"));
-
+		ObjectMapper objectMapper = new ObjectMapper();
 		while (true) {
-	         ConsumerRecords<String, String> records = consumer.poll(100);
-	         for (ConsumerRecord<String, String> record : records)
-	             System.out.printf("offset = %d, key = %s, value = %s", record.offset(), record.key(), record.value());
-	     }		
+			ConsumerRecords<String, String> records = consumer.poll(100);
+			for (ConsumerRecord<String, String> record : records) {
+				System.out.printf("offset = %d, key = %s, value = %s \n", record.offset(), record.key(), record.value());
+				NameAndAge data = objectMapper.readValue(record.value(), NameAndAge.class);
+				System.out.println("The Name is  = " + data.getName());
+			    System.out.println("The Age is = " + data.getAge());
+		 	
+			}
+		}
 	}
 
 }
